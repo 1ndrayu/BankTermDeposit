@@ -1,0 +1,103 @@
+{
+  "model_type": "Reduced MLPClassifier (5 features)",
+  "selected_features": [
+    "duration",
+    "pdays",
+    "job_encoded",
+    "contact_encoded",
+    "previous"
+  ],
+  "performance_metrics": {
+    "test_accuracy": 0.888897080507225,
+    "precision": 0.543010752688172,
+    "recall": 0.3182104599873976,
+    "f1_score": 0.40127135478744536,
+    "auc_roc": 0.8646958760855387,
+    "confusion_matrix": [
+      [
+        11552,
+        425
+      ],
+      [
+        1082,
+        505
+      ]
+    ],
+    "training_iterations": 15,
+    "training_score": 0.8915221032009353,
+    "best_validation_score": 0.8947867298578199,
+    "selected_features": [
+      "duration",
+      "pdays",
+      "job_encoded",
+      "contact_encoded",
+      "previous"
+    ]
+  },
+  "feature_analysis": {
+    "TP_mean": {
+      "duration": 2.3744666732005455,
+      "previous": 0.575070838025855,
+      "pdays": 0.5677327176503657,
+      "job_encoded": 4.863366336633663,
+      "contact_encoded": 0.2297029702970297
+    },
+    "TN_mean": {
+      "duration": -0.23052148105667827,
+      "previous": -0.06734156805571277,
+      "pdays": -0.05685723137384602,
+      "job_encoded": 4.30090027700831,
+      "contact_encoded": 0.7060249307479224
+    },
+    "TP_vs_TN_diff": {
+      "duration": 2.604988154257224,
+      "previous": 0.6424124060815678,
+      "pdays": 0.6245899490242117,
+      "job_encoded": 0.5624660596253532,
+      "contact_encoded": -0.4763219604508927
+    },
+    "overall_mean": {
+      "duration": -0.005364055569865987,
+      "previous": -0.004529137130372674,
+      "pdays": 0.007650704754038417,
+      "job_encoded": 4.370171040990858,
+      "contact_encoded": 0.6425833087584784
+    },
+    "abs_diff": {
+      "duration": 2.604988154257224,
+      "previous": 0.6424124060815678,
+      "pdays": 0.6245899490242117,
+      "job_encoded": 0.5624660596253532,
+      "contact_encoded": 0.4763219604508927
+    }
+  },
+  "feature_importance": {
+    "TP_Prob_Corr": {
+      "duration": 0.6633237477842354,
+      "pdays": 0.15140100811333185,
+      "job_encoded": 0.14809359002387393,
+      "previous": 0.11448630106711716,
+      "contact_encoded": 0.0204104717937458
+    },
+    "TN_Prob_Corr": {
+      "duration": 0.7493498741015824,
+      "pdays": 0.21159710712843044,
+      "job_encoded": 0.0679523188200091,
+      "previous": 0.20515409295617745,
+      "contact_encoded": -0.34832618266036297
+    },
+    "abs_corr": {
+      "duration": 0.6633237477842354,
+      "pdays": 0.15140100811333185,
+      "job_encoded": 0.14809359002387393,
+      "previous": 0.11448630106711716,
+      "contact_encoded": 0.0204104717937458
+    }
+  },
+  "sample_analysis": {
+    "total_samples": 13564,
+    "true_positives": 505,
+    "true_negatives": 11552,
+    "accuracy_on_test_set": 0.888897080507225
+  }
+}

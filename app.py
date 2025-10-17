@@ -6,11 +6,12 @@ import pandas as pd
 
 app = Flask(__name__)
 
-# Load the trained model
-model = joblib.load('final_model.pkl')
+# Load the trained reduced model (5 features only)
+model = joblib.load('reduced_model.pkl')
+scaler = joblib.load('reduced_scaler.pkl')
 
 # Load feature analysis results
-with open('model_results.json', 'r') as f:
+with open('reduced_model_results.json', 'r') as f:
     model_results = json.load(f)
 
 with open('feature_analysis.json', 'r') as f:
@@ -26,7 +27,7 @@ def predict():
         # Get input data from the request
         data = request.get_json()
 
-        # Extract the most important features based on our analysis
+        # Extract the 5 features used in the reduced model
         features = [
             float(data['duration']),
             float(data['pdays']),
@@ -35,12 +36,13 @@ def predict():
             float(data['previous'])
         ]
 
-        # Convert to numpy array and reshape for prediction
+        # Convert to numpy array and scale using the reduced model's scaler
         features_array = np.array(features).reshape(1, -1)
+        features_scaled = scaler.transform(features_array)
 
         # Make prediction
-        prediction_prob = model.predict_proba(features_array)[0]
-        prediction = model.predict(features_array)[0]
+        prediction_prob = model.predict_proba(features_scaled)[0]
+        prediction = model.predict(features_scaled)[0]
 
         # Calculate confidence percentage
         confidence = max(prediction_prob) * 100
@@ -77,7 +79,8 @@ def predict():
 def model_info():
     return jsonify({
         'model_metrics': model_results,
-        'feature_analysis': feature_analysis,
+        'selected_features': model_results.get('selected_features', []),
+        'model_type': 'Reduced MLPClassifier (5 features)',
         'important_features': [
             'duration', 'pdays', 'job_encoded', 'contact_encoded', 'previous'
         ]
