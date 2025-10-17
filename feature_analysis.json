@@ -1,0 +1,82 @@
+{
+  "top_differentiating_features": {
+    "TP_mean": {
+      "duration": 1.911270474513554,
+      "pdays": 0.5806802417642386,
+      "job_encoded": 4.883614088820827,
+      "contact_encoded": 0.20980091883614088,
+      "previous": 0.4428132375110196,
+      "poutcome_encoded": 2.229709035222052,
+      "housing_encoded": 0.2664624808575804,
+      "age": 0.2948748375359714,
+      "campaign": -0.17834432919964716,
+      "education_encoded": 1.3782542113323124
+    },
+    "TN_mean": {
+      "duration": -0.23318416089747468,
+      "pdays": -0.05237710821183262,
+      "job_encoded": 4.293657688966117,
+      "contact_encoded": 0.7075586446568202,
+      "previous": -0.05078855277602652,
+      "poutcome_encoded": 2.5947871416159862,
+      "housing_encoded": 0.589748045178106,
+      "age": -0.01098652414983554,
+      "campaign": 0.038594445526602114,
+      "education_encoded": 1.2108601216333623
+    },
+    "TP_vs_TN_diff": {
+      "duration": 2.1444546354110288,
+      "pdays": 0.6330573499760712,
+      "job_encoded": 0.5899563998547102,
+      "contact_encoded": -0.4977577258206793,
+      "previous": 0.4936017902870461,
+      "poutcome_encoded": -0.3650781063939341,
+      "housing_encoded": -0.3232855643205256,
+      "age": 0.3058613616858069,
+      "campaign": -0.21693877472624928,
+      "education_encoded": 0.1673940896989501
+    }
+  },
+  "tp_probability_correlations": {
+    "job_encoded": 0.27217793057426426,
+    "duration": 0.23204979442031282,
+    "month_encoded": 0.21568320849478975,
+    "previous": 0.15968095739862315,
+    "pdays": 0.15599503638603468,
+    "campaign": -0.14613769893643896,
+    "housing_encoded": -0.11108576119582973,
+    "contact_encoded": -0.10694226792750566,
+    "age": 0.07710098370625665,
+    "loan_encoded": -0.07141394132440398,
+    "balance": 0.07132252779857107,
+    "day": -0.061790123879733545,
+    "poutcome_encoded": -0.042183404663318026,
+    "education_encoded": 0.02122163786448425,
+    "marital_encoded": -0.01912067005413019,
+    "default_encoded": -0.005437971418315456
+  },
+  "tn_probability_correlations": {
+    "job_encoded": 0.03171403778165268,
+    "duration": 0.6608833454431664,
+    "month_encoded": -0.06946379654019003,
+    "previous": 0.12331976074784784,
+    "pdays": 0.09410313040775785,
+    "campaign": -0.11447925745202579,
+    "housing_encoded": -0.22433849719510757,
+    "contact_encoded": -0.2558275055641964,
+    "age": -0.015550382389027688,
+    "loan_encoded": -0.12346381232549529,
+    "balance": 0.14422729888275448,
+    "day": -0.09557938262777427,
+    "poutcome_encoded": -0.1270905075862208,
+    "education_encoded": 0.14160461849855147,
+    "marital_encoded": 0.08499596126239378,
+    "default_encoded": -0.04005266863072585
+  },
+  "sample_sizes": {
+    "true_positives": 653,
+    "true_negatives": 11510,
+    "false_positives": 467,
+    "false_negatives": 934
+  }
+}

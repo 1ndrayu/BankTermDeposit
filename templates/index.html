@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Term Deposit Prediction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            margin: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            font-weight: 300;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #333;
+        }
+
+        .btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            background: #555;
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 1rem 0;
+            color: #333;
+        }
+
+        .result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .result.success {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            color: #333;
+        }
+
+        .result.error {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            color: #333;
+        }
+
+        .prediction {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .confidence {
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .confidence-bar {
+            width: 100%;
+            height: 20px;
+            background: #e1e8ed;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: #333;
+            transition: width 0.5s ease;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .metric {
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #e1e8ed;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.3rem;
+        }
+
+        .info-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e1e8ed;
+        }
+
+        .info-title {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .feature-item {
+            background: #f8f9fa;
+            padding: 0.8rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏦 Bank Term Deposit Prediction</h1>
+        <p style="text-align: center; color: #666; margin-bottom: 2rem;">
+            Enter customer information to predict if they will subscribe to a term deposit
+        </p>
+
+        <form id="predictionForm">
+            <div class="form-group">
+                <label for="duration">📞 Call Duration (seconds)</label>
+                <input type="number" id="duration" name="duration" min="0" max="5000" required
+                       placeholder="e.g., 261">
+            </div>
+
+            <div class="form-group">
+                <label for="pdays">📅 Days Since Last Contact</label>
+                <input type="number" id="pdays" name="pdays" min="-1" max="1000" required
+                       placeholder="e.g., -1 (never contacted) or 182">
+            </div>
+
+            <div class="form-group">
+                <label for="job">💼 Job Type</label>
+                <select id="job" name="job" required>
+                    <option value="">Select job type</option>
+                    <option value="0">Management</option>
+                    <option value="1">Technician</option>
+                    <option value="2">Entrepreneur</option>
+                    <option value="3">Blue-collar</option>
+                    <option value="4">Unknown</option>
+                    <option value="5">Retired</option>
+                    <option value="6">Admin</option>
+                    <option value="7">Services</option>
+                    <option value="8">Self-employed</option>
+                    <option value="9">Unemployed</option>
+                    <option value="10">Housemaid</option>
+                    <option value="11">Student</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="contact">📱 Contact Method</label>
+                <select id="contact" name="contact" required>
+                    <option value="">Select contact method</option>
+                    <option value="0">Unknown</option>
+                    <option value="1">Cellular</option>
+                    <option value="2">Telephone</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="previous">📞 Previous Contacts</label>
+                <input type="number" id="previous" name="previous" min="0" max="100" required
+                       placeholder="e.g., 0 or 3">
+            </div>
+
+            <button type="submit" class="btn">🔮 Predict Subscription</button>
+        </form>
+
+        <div class="loading" id="loading">
+            <p>Analyzing customer data...</p>
+        </div>
+
+        <div class="result" id="result"></div>
+
+        <div class="info-section">
+            <div class="info-title">📊 Model Performance</div>
+            <div class="metrics" id="modelMetrics">
+                <div class="metric">
+                    <div class="metric-value" id="accuracy">-</div>
+                    <div class="metric-label">Accuracy</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="precision">-</div>
+                    <div class="metric-label">Precision</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="recall">-</div>
+                    <div class="metric-label">Recall</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="f1">-</div>
+                    <div class="metric-label">F1-Score</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-title">🎯 Key Features for Prediction</div>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <strong>Call Duration</strong><br>
+                    <span style="font-size: 0.9rem; color: #666;">Longer calls tend to indicate higher interest</span>
+                </div>
+                <div class="feature-item">
+                    <strong>Days Since Contact</strong><br>
+                    <span style="font-size: 0.9rem; color: #666;">Recent contacts show more engagement</span>
+                </div>
+                <div class="feature-item">
+                    <strong>Job Type</strong><br>
+                    <span style="font-size: 0.9rem; color: #666;">Professional roles correlate with deposits</span>
+                </div>
+                <div class="feature-item">
+                    <strong>Contact Method</strong><br>
+                    <span style="font-size: 0.9rem; color: #666;">Cellular contact shows higher success</span>
+                </div>
+                <div class="feature-item">
+                    <strong>Previous Contacts</strong><br>
+                    <span style="font-size: 0.9rem; color: #666;">Multiple contacts indicate persistence</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const loading = document.getElementById('loading');
+            const result = document.getElementById('result');
+
+            // Show loading
+            loading.style.display = 'block';
+            result.style.display = 'none';
+
+            try {
+                const formData = new FormData(e.target);
+                const data = {
+                    duration: formData.get('duration'),
+                    pdays: formData.get('pdays'),
+                    job: formData.get('job'),
+                    contact: formData.get('contact'),
+                    previous: formData.get('previous')
+                };
+
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const responseData = await response.json();
+
+                if (responseData.success) {
+                    // Show result
+                    result.className = 'result success';
+                    result.innerHTML = `
+                        <div class="prediction">
+                            ${responseData.prediction === 'Yes' ? '✅' : '❌'}
+                            Customer will ${responseData.prediction.toLowerCase()} subscribe to term deposit
+                        </div>
+                        <div class="confidence">
+                            <strong>Prediction Confidence: ${responseData.confidence}%</strong>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: ${responseData.confidence}%"></div>
+                            </div>
+                            <small>Yes: ${responseData.probabilities.yes}% | No: ${responseData.probabilities.no}%</small>
+                        </div>
+                    `;
+
+                    // Update model metrics
+                    document.getElementById('accuracy').textContent = responseData.model_metrics.accuracy;
+                    document.getElementById('precision').textContent = responseData.model_metrics.precision;
+                    document.getElementById('recall').textContent = responseData.model_metrics.recall;
+                    document.getElementById('f1').textContent = responseData.model_metrics.f1_score;
+
+                } else {
+                    throw new Error(responseData.error);
+                }
+
+            } catch (error) {
+                result.className = 'result error';
+                result.innerHTML = `
+                    <div class="prediction">❌ Error</div>
+                    <p>There was an error making the prediction: ${error.message}</p>
+                `;
+            } finally {
+                loading.style.display = 'none';
+                result.style.display = 'block';
+            }
+        });
+
+        // Load model metrics on page load
+        window.addEventListener('load', async function() {
+            try {
+                const response = await fetch('/model-info');
+                const data = await response.json();
+
+                // Update model metrics
+                document.getElementById('accuracy').textContent = (data.model_metrics.test_accuracy * 100).toFixed(1) + '%';
+                document.getElementById('precision').textContent = (data.model_metrics.precision * 100).toFixed(1) + '%';
+                document.getElementById('recall').textContent = (data.model_metrics.recall * 100).toFixed(1) + '%';
+                document.getElementById('f1').textContent = (data.model_metrics.f1_score * 100).toFixed(1) + '%';
+
+            } catch (error) {
+                console.error('Error loading model info:', error);
+            }
+        });
+    </script>
+</body>
+</html>
